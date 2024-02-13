@@ -1,20 +1,20 @@
-version: '3.9'
+version: "3.9"
 
 x-base_service: &base_service
-    ports:
-      - "${WEBUI_PORT:-7860}:7860"
-    volumes:
-      - &v1 ./data:/data
-      - &v2 ./output:/output
-    stop_signal: SIGKILL
-    tty: true
-    deploy:
-      resources:
-        reservations:
-          devices:
-              - driver: nvidia
-                device_ids: ['0']
-                capabilities: [compute, utility]
+  ports:
+    - "${WEBUI_PORT:-7860}:7860"
+  volumes:
+    - &v1 ./data:/data
+    - &v2 ./output:/output
+  stop_signal: SIGKILL
+  tty: true
+  deploy:
+    resources:
+      reservations:
+        devices:
+          - driver: nvidia
+            device_ids: ["0"]
+            capabilities: [compute, utility]
 
 name: webui-docker
 
@@ -85,7 +85,6 @@ services:
   #     - PRELOAD=true
   #     - CLI_ARGS=--always_use_cpu
 
-
   comfy: &comfy
     <<: *base_service
     profiles: ["comfy"]
@@ -105,16 +104,16 @@ services:
   # https://ngrok.com/docs/using-ngrok-with/docker/
   # http://127.0.0.1:4040/inspect/http
   ngrok:
-      image: ngrok/ngrok:latest
-      container_name: ngrok
-      restart: unless-stopped
-      profiles: ["ngrok"]
-      command:
-        - "start"
-        - "--all"
-        - "--config"
-        - "/etc/ngrok.yml"
-      volumes:
-        - ./data/ngrok/ngrok.yml:/etc/ngrok.yml
-      ports:
-        - 4040:4040
+    image: ngrok/ngrok:latest
+    container_name: ngrok
+    restart: unless-stopped
+    profiles: ["ngrok"]
+    command:
+      - "start"
+      - "--all"
+      - "--config"
+      - "/etc/ngrok.yml"
+    volumes:
+      - ./data/ngrok/ngrok.yml:/etc/ngrok.yml
+    ports:
+      - 4040:4040
