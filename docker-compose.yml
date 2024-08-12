@@ -13,6 +13,7 @@ x-base_service: &base_service
       - &v2 ./output:/output
     stop_signal: SIGKILL
     tty: true
+    restart: always
     deploy:
       resources:
         reservations:
@@ -50,6 +51,7 @@ services:
     profiles: ["comfy"]
     build: ./services/comfy/
     image: sd-comfy:7
+    restart: always
     environment:
       - CLI_ARGS=
 
