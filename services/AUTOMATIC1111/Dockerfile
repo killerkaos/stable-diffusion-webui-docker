@@ -40,6 +40,10 @@ COPY --from=download /repositories/ ${ROOT}/repositories/
 RUN mkdir ${ROOT}/interrogate && cp ${ROOT}/repositories/clip-interrogator/clip_interrogator/data/* ${ROOT}/interrogate
 
 RUN --mount=type=cache,target=/root/.cache/pip \
+   pip uninstall -y typing_extensions && \
+   pip install typing_extensions==4.11.0
+
+RUN --mount=type=cache,target=/root/.cache/pip \
   pip install pyngrok xformers==0.0.26.post1 \
   git+https://github.com/TencentARC/GFPGAN.git@8d2447a2d918f8eba5a4a01463fd48e45126a379 \
   git+https://github.com/openai/CLIP.git@d50d76daa670286dd6cacf3bcd80b5e4823fc8e1 \
