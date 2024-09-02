@@ -2,6 +2,9 @@ FROM alpine/git:2.36.2 as download
 
 COPY clone.sh /clone.sh
 
+RUN git config --global http.version HTTP/1.1
+RUN git config --global http.postBuffer 157286400
+
 RUN . /clone.sh stable-diffusion-webui-assets https://github.com/AUTOMATIC1111/stable-diffusion-webui-assets.git 6f7db241d2f8ba7457bac5ca9753331f0c266917
 
 RUN . /clone.sh stable-diffusion-stability-ai https://github.com/Stability-AI/stablediffusion.git cf1d67a6fd5ea1aa600c4df58e5b47da45f6bdbf \
