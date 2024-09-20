@@ -1,4 +1,4 @@
-FROM alpine/git:2.36.2 as download
+FROM alpine/git:2.36.2 AS download
 
 COPY clone.sh /clone.sh
 
@@ -31,7 +31,8 @@ RUN --mount=type=cache,target=/root/.cache/pip \
   git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git && \
   cd stable-diffusion-webui && \
   git reset --hard v1.9.4 && \
-  pip install -r requirements_versions.txt
+  pip install -r requirements_versions.txt && \
+  pip install -U typing_extensions 
 
 
 ENV ROOT=/stable-diffusion-webui
