@@ -15,7 +15,7 @@ mkdir -vp /data/.cache \
 
 echo "Downloading, this might take a while..."
 
-aria2c -x 10 --disable-ipv6 --input-file /docker/links.txt --dir /data/models --continue
+aria2c --header "Authorization: Bearer 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" -x 10 --disable-ipv6 --input-file /docker/links.txt --dir /data/models --continue
 
 echo "Checking SHAs..."
 
