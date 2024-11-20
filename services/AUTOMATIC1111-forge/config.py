@@ -7,7 +7,7 @@ import re
 import os.path
 import sys
 
-DEFAULT_FILEPATH = '/data/config/auto/config.json'
+DEFAULT_FILEPATH = '/data/config/forge/config.json'
 
 DEFAULT_OUTDIRS = {
   "outdir_samples": "",

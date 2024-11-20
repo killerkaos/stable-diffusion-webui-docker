@@ -1,18 +1,18 @@
 x-base_service: &base_service
-    ports:
-      - "${WEBUI_PORT:-7860}:7860"
-    volumes:
-      - &v1 ./data:/data
-      - &v2 ./output:/output
-    stop_signal: SIGKILL
-    tty: true
-    deploy:
-      resources:
-        reservations:
-          devices:
-              - driver: nvidia
-                device_ids: ['0']
-                capabilities: [compute, utility]
+  ports:
+    - "${WEBUI_PORT:-7860}:7860"
+  volumes:
+    - &v1 ./data:/data
+    - &v2 ./output:/output
+  stop_signal: SIGKILL
+  tty: true
+  deploy:
+    resources:
+      reservations:
+        devices:
+          - driver: nvidia
+            device_ids: ["0"]
+            capabilities: [compute, utility]
 
 name: webui-docker
 
@@ -38,6 +38,21 @@ services:
     environment:
       - CLI_ARGS=--no-half --precision full --allow-code --enable-insecure-extension-access --api
 
+  forge: &forge
+    <<: *base_service
+    profiles: ["forge"]
+    build: ./services/AUTOMATIC1111-forge
+    image: sd-auto-forge:78
+    environment:
+      - CLI_ARGS=--allow-code --xformers --enable-insecure-extension-access --api
+
+  forge-cpu:
+    <<: *forge
+    profiles: ["forge-cpu"]
+    deploy: {}
+    environment:
+      - CLI_ARGS=--no-half --precision full --allow-code --enable-insecure-extension-access --api
+
   comfy: &comfy
     <<: *base_service
     profiles: ["comfy"]
@@ -45,7 +60,6 @@ services:
     image: sd-comfy:7
     environment:
       - CLI_ARGS=
-
 
   comfy-cpu:
     <<: *comfy
