@@ -6,6 +6,7 @@ x-base_service: &base_service
       - &v2 ./output:/output
     stop_signal: SIGKILL
     tty: true
+    env_file: .env
     deploy:
       resources:
         reservations:
@@ -30,6 +31,7 @@ services:
     image: sd-auto:78
     environment:
       - CLI_ARGS=--allow-code --medvram --xformers --enable-insecure-extension-access --api
+    env_file: .env
 
   auto-cpu:
     <<: *automatic
@@ -37,6 +39,7 @@ services:
     deploy: {}
     environment:
       - CLI_ARGS=--no-half --precision full --allow-code --enable-insecure-extension-access --api
+    env_file: .env
 
   comfy: &comfy
     <<: *base_service
@@ -45,6 +48,7 @@ services:
     image: sd-comfy:7
     environment:
       - CLI_ARGS=
+    env_file: .env
 
 
   comfy-cpu:
@@ -53,3 +57,4 @@ services:
     deploy: {}
     environment:
       - CLI_ARGS=--cpu
+    env_file: .env
