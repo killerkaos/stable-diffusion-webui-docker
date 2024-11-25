@@ -39,7 +39,7 @@ if [ "${USE_KRITA}" = "true" ]; then
     ln -sfT /data/models/upscale_models upscale_models && cd ..
   fi
   if [ "${KRITA_DOWNLOAD_MODELS:-false}" = "true" ]; then
-    cd "${ROOT}/krita-ai-diffusion/scripts" && python3 download_models.py --verbose --retry-attempts 10 --continue-on-error --recommended /data && cd ..
+    cd "${ROOT}/krita-ai-diffusion/scripts" && python3 download_models.py --verbose --retry-attempts 10 --continue-on-error --recommended /data && cd -
   fi
 fi
 if [ "${USE_GGUF}" = "true" ]; then
