@@ -39,7 +39,7 @@ if [ "${USE_KRITA}" = "true" ]; then
   [ -d "${ROOT}/models/upscale_models" ] && rm -rf "${ROOT}/models/upscale_models"
   if [ ! -L "${ROOT}/models/upscale_models" ]; then
     cd "${ROOT}/models"
-    ln -sfT /data/models/upscale_models upscale_models
+    ln -sfT /data/models/upscale_models upscale_models && cd ..
   fi
 fi
 if [ "${USE_GGUF}" = "true" ]; then
