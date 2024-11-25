@@ -26,27 +26,27 @@ done
 if [ "${UPDATE_CUSTOM_NODES:-false}" = "true" ]; then
   find /data/config/comfy/custom_nodes/ -mindepth 1 -maxdepth 1 -type d | while read NODE
     do echo "---- ${NODE##*/} ----"
-    cd $NODE && git pull;
-    [ "${NODE##*/}" = "krita-ai-diffusion" ] && git submodule update --recursive; cd ..
+    set +e
+    cd "$NODE" && git pull; cd ..;
+    set -e
   done
 fi
 
 if [ "${USE_KRITA}" = "true" ]; then
-  [ ! -e "${CUSTOM_NODES}/krita-ai-diffusion" ] && cp -a "${ROOT}/krita-ai-diffusion" "${CUSTOM_NODES}"/
-  if [ "${KRITA_DOWNLOAD_MODELS:-false}" = "true" ]; then
-    cd "${ROOT}/krita-ai-diffusion/scripts" && python3 download_models.py --verbose --retry-attempts 10 --continue-on-error --recommended /data && cd ..
-  fi
   [ -d "${ROOT}/models/upscale_models" ] && rm -rf "${ROOT}/models/upscale_models"
   if [ ! -L "${ROOT}/models/upscale_models" ]; then
     cd "${ROOT}/models"
     ln -sfT /data/models/upscale_models upscale_models && cd ..
   fi
+  if [ "${KRITA_DOWNLOAD_MODELS:-false}" = "true" ]; then
+    cd "${ROOT}/krita-ai-diffusion/scripts" && python3 download_models.py --verbose --retry-attempts 10 --continue-on-error --recommended /data && cd ..
+  fi
 fi
 if [ "${USE_GGUF}" = "true" ]; then
-  [ ! -e "${CUSTOM_NODES}/ComfyUI-GGUF" ] && mv "${ROOT}/ComfyUI-GGUF" "${CUSTOM_NODES}"/
+  [ ! -e "${CUSTOM_NODES}/ComfyUI-GGUF" ] && cp -a "${ROOT}/ComfyUI-GGUF" "${CUSTOM_NODES}"/
 fi
 if [ "${USE_XFLUX}" = "true" ]; then
-  [ ! -e "${CUSTOM_NODES}/x-flux-comfyui" ] && mv "${ROOT}/x-flux-comfyui" "${CUSTOM_NODES}"/
+  [ ! -e "${CUSTOM_NODES}/x-flux-comfyui" ] && cp -a "${ROOT}/x-flux-comfyui" "${CUSTOM_NODES}"/
   [ ! -e "/data/models/clip_vision" ] && mkdir -p /data/models/clip_vision
   [ ! -e "/data/models/clip_vision/model.safetensors" ] && cd /data/models/clip_vision && \
     python3 -c 'import sys; from urllib.request import urlopen; from pathlib import Path; Path(sys.argv[2]).write_bytes(urlopen(sys.argv[1]).read())' \
@@ -59,20 +59,20 @@ if [ "${USE_XFLUX}" = "true" ]; then
   [ ! -e "${ROOT}/models/xlabs" ] && cd "${ROOT}/models" && ln -sT /data/models/xlabs xlabs && cd ..
 fi
 if [ "${USE_CNAUX}" = "true" ] || [ "${USE_KRITA}" = "true" ]; then
-  [ ! -e "${CUSTOM_NODES}/comfyui_controlnet_aux" ] && mv "${ROOT}/comfyui_controlnet_aux" "${CUSTOM_NODES}"/
+  [ ! -e "${CUSTOM_NODES}/comfyui_controlnet_aux" ] && cp -a "${ROOT}/comfyui_controlnet_aux" "${CUSTOM_NODES}"/
 fi
 if [ "${USE_IPAPLUS}" = "true" ] || [ "${USE_KRITA}" = "true" ]; then
-  [ ! -e "${CUSTOM_NODES}/ComfyUI_IPAdapter_plus" ] && mv "${ROOT}/ComfyUI_IPAdapter_plus" "${CUSTOM_NODES}"/
+  [ ! -e "${CUSTOM_NODES}/ComfyUI_IPAdapter_plus" ] && cp -a "${ROOT}/ComfyUI_IPAdapter_plus" "${CUSTOM_NODES}"/
 fi
 if [ "${USE_INPAINT}" = "true" ] || [ "${USE_KRITA}" = "true" ]; then
-  [ ! -e "${CUSTOM_NODES}/comfyui-inpaint-nodes" ] && mv "${ROOT}/comfyui-inpaint-nodes" "${CUSTOM_NODES}"/
+  [ ! -e "${CUSTOM_NODES}/comfyui-inpaint-nodes" ] && cp -a "${ROOT}/comfyui-inpaint-nodes" "${CUSTOM_NODES}"/
 fi
 if [ "${USE_TOOLING}" = "true" ] || [ "${USE_KRITA}" = "true" ]; then
-  [ ! -e "${CUSTOM_NODES}/comfyui-tooling-nodes" ] && mv "${ROOT}/comfyui-tooling-nodes" "${CUSTOM_NODES}"/
+  [ ! -e "${CUSTOM_NODES}/comfyui-tooling-nodes" ] && cp -a "${ROOT}/comfyui-tooling-nodes" "${CUSTOM_NODES}"/
 fi
 
 if [ -f "/data/config/comfy/startup.sh" ]; then
-  pushd ${ROOT}
+  pushd "${ROOT}"
   . /data/config/comfy/startup.sh
   popd
 fi
