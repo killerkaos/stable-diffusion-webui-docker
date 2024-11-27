@@ -1,12 +1,11 @@
-version: '3.9'
-
 x-base_service: &base_service
     ports:
-      - "7860:7860"
+      - "${WEBUI_PORT:-7860}:7860"
     volumes:
       - &v1 ./data:/data
       - &v2 ./output:/output
-    stop_signal: SIGINT
+    stop_signal: SIGKILL
+    tty: true
     deploy:
       resources:
         reservations:
@@ -28,7 +27,7 @@ services:
     <<: *base_service
     profiles: ["auto"]
     build: ./services/AUTOMATIC1111
-    image: sd-auto:58
+    image: sd-auto:78
     environment:
       - CLI_ARGS=--allow-code --medvram --xformers --enable-insecure-extension-access --api
 
@@ -39,28 +38,11 @@ services:
     environment:
       - CLI_ARGS=--allow-code --medvram --xformers --enable-insecure-extension-access --api
 
-  invoke: &invoke
-    <<: *base_service
-    profiles: ["invoke"]
-    build: ./services/invoke/
-    image: sd-invoke:29
-    environment:
-      - PRELOAD=true
-      - CLI_ARGS=--xformers
-
-  # invoke-cpu:
-  #   <<: *invoke
-  #   profiles: ["invoke-cpu"]
-  #   environment:
-  #     - PRELOAD=true
-  #     - CLI_ARGS=--always_use_cpu
-
   comfy: &comfy
     <<: *base_service
     profiles: ["comfy"]
     build: ./services/comfy/
-    image: sd-comfy:2
-    tty: true
+    image: sd-comfy:7
     environment:
       - CLI_ARGS=
 
